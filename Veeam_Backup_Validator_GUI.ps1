@@ -1,4 +1,4 @@
-﻿<# 
+<# 
 .NAME
     Veeam Backup Validator PowerShell GUI
 .SYNOPSIS
@@ -29,9 +29,13 @@ Function Choose-File($InitialDirectory)
     $OpenFileDialog.Title = "Please Select File"
     $OpenFileDialog.InitialDirectory = $InitialDirectory
     $OpenFileDialog.filter = "Veeam Backup File (*.vbk)|*.vbk|Veeam Backup Metadata File (*.vbm)|*.vbm"
-    # Out-Null supresses the "OK" after selecting the file.
-    $OpenFileDialog.ShowDialog() | Out-Null
+    If ($OpenFileDialog.ShowDialog() -eq "Cancel") 
+    {
+    [System.Windows.Forms.MessageBox]::Show("No File Selected. Please select a file !", "Error", 0, [System.Windows.Forms.MessageBoxIcon]::Exclamation)
+    }
     $Global:SelectedFile = $OpenFileDialog.FileName
+    #$OpenFileDialog.ShowDialog() | Out-Null
+    
 }
 
 Function Choose-Folder($InitialDirectory)
@@ -62,7 +66,7 @@ $VBVGUIlblInfo.Location          = New-Object System.Drawing.Point(15,15)
 $VBVGUIlblInfo.Font              = 'Microsoft Sans Serif,10'
 
 $VBVGUIValidateButton            = New-Object System.Windows.Forms.Button
-$VBVGUIValidateButton.text       = "Choose Folder and validate .vbk or .vbm"
+$VBVGUIValidateButton.text       = "Choose Folder and Start Validation"
 $VBVGUIValidateButton.width      = 120
 $VBVGUIValidateButton.height     = 40
 $VBVGUIValidateButton.location   = New-Object System.Drawing.Point(90,155)
@@ -100,7 +104,7 @@ $VBVGUIDisclaimer.Font           = 'Microsoft Sans Serif,10'
 
 $VBVGUIChooseFile.Add_Click({
 Choose-File
-[System.Windows.Forms.MessageBox]::Show("The following file has been selected: $Global:SelectedFile" , "Information", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
+#[System.Windows.Forms.MessageBox]::Show("The following file has been selected: $Global:SelectedFile" , "Information", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
 })
 
 $VBVGUIValidateButton.Add_Click({
@@ -116,8 +120,8 @@ else
             Choose-Folder
             #$ReportString="$ReportLocation"+"$ReportName"+".xml"
             $ReportString="$Global:SelectedFolder"+"\"+"$ReportName"+".xml"
-            Set-Location -path $ValidatorPath
-            .\Veeam.Backup.Validator.exe /file:$Global:SelectedFile /report:$ReportString /format:xml
+            Set-Location -path $ValidatorPath        
+            Start-Process cmd.exe -Wait "/c .\Veeam.Backup.Validator.exe /file:$Global:SelectedFile /report:$ReportString /format:xml"
             [System.Windows.Forms.MessageBox]::Show("Validation process finished !" , "Information", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
             
         }
@@ -127,13 +131,11 @@ else
             #$ReportString="$ReportLocation"+"$ReportName"+".html"
             $ReportString="$Global:SelectedFolder"+"\"+"$ReportName"+".html"
             Set-Location -path $ValidatorPath
-            .\Veeam.Backup.Validator.exe /file:$Global:SelectedFile /report:$ReportString
+            Start-Process cmd.exe -Wait "/c .\Veeam.Backup.Validator.exe /file:$Global:SelectedFile /report:$ReportString"
             [System.Windows.Forms.MessageBox]::Show("Validation process finished !" , "Information", 0, [System.Windows.Forms.MessageBoxIcon]::Information)
         }
     }
 })
-
-
 
 $VBVGUI.Controls.AddRange(@($VBVGUIlblInfo,$VBVGUIValidateButton,$VBVGUIXMLReport,$VBVGUIHTMLReport,$VBVGUIDisclaimer,$VBVGUIChooseFile))
 [void] $VBVGUI.ShowDialog()
