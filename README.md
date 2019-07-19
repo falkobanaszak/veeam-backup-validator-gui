@@ -1,6 +1,8 @@
 # Veeam Backup Validator PowerShell GUI
 This PowerShell GUI tool triggers the built-in Veeam.Backup.Validator.exe.
 
+**Original Blog Post: [Veeam Backup Validator Powershell GUI - on virtualhome.blog](https://www.virtualhome.blog/2019/03/13/veeam-backup-validator-powershell-gui/)
+
 ## Intro
 
 It checks your backup files via CRC at the file level. For the integrity validation of your backups the Validator uses the checksum algorithm.
