@@ -14,9 +14,11 @@ You can find the Veeam Backup Validator.exe file by default under
 You can find out more on the Veeam Backup Validator on these sites:
 
 [Veeam Backup Validator - Veeam Helpcenter](https://helpcenter.veeam.com/docs/backup/vsphere/backup_validator.html?ver=95u4)
+
 [How to use the Veeam Backup Validator with the cmd](https://www.veeam.com/kb2086)
 
 The simple GUI looks like this:
+
 ![Veeam Backup Validator PowerShell GUI](https://github.com/falkobanaszak/veeam-backup-validator-gui/blob/master/PowerShellGUI.png)
 
 In this first Version (Version 0.1) you are able to choose a .vbk or .vbm File for validation:
